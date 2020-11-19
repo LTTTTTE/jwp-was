@@ -18,9 +18,9 @@ public class RequestTypeMatcher {
     }
 
     public static RequestTypeMatcher of(RequestType requestType) {
-        if (requestType.isGet()) {
-            return new RequestTypeMatcher(requestType.getMethod(), "");
-        }
+//        if (requestType.isGet()) {
+//            return new RequestTypeMatcher(requestType.getMethod(), "");
+//        }
         return new RequestTypeMatcher(requestType.getMethod(), requestType.getPath());
     }
 

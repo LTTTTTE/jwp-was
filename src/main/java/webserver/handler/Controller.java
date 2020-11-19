@@ -6,6 +6,7 @@ import static webserver.HttpMethod.POST;
 import db.DataBase;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import model.User;
 import webserver.request.Request;
@@ -15,13 +16,13 @@ import webserver.response.Response;
 
 public class Controller {
 
-    private static Map<RequestTypeMatcher, BiFunction<Request, Response, Response>> mapper = new HashMap<>();
+    private static final Map<RequestTypeMatcher, BiFunction<Request, Response, Response>> mapper = new HashMap<>();
 
     static {
         mapper.put(
-            RequestTypeMatcher.of(GET, ""),
+            RequestTypeMatcher.of(GET, "/"),
             (request, response) -> {
-                response.ok(request);
+                response.redirectTo(request, "/index.html ");
                 return response;
             }
         );
@@ -38,6 +39,10 @@ public class Controller {
     }
 
     public static BiFunction<Request, Response, Response> mapping(RequestType requestType) {
-        return mapper.get(RequestTypeMatcher.of(requestType));
+        return Optional.ofNullable(mapper.get(RequestTypeMatcher.of(requestType)))
+            .orElseGet(() -> (request, response) -> {
+                response.ok(request);
+                return response;
+            });
     }
 }
