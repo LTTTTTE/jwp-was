@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import model.User;
+import model.UserCreateRequest;
+import model.UserLoginRequest;
 import webserver.request.Request;
 import webserver.request.RequestType;
 import webserver.request.RequestTypeMatcher;
@@ -29,10 +30,27 @@ public class Controller {
         mapper.put(
             RequestTypeMatcher.of(POST, "/user/create"),
             (request, response) -> {
-                User user = request.getBody(User.class);
-                DataBase.addUser(user);
+                UserCreateRequest user = request.getBody(UserCreateRequest.class);
+                DataBase.addUser(user.toEntity());
 
                 response.redirectTo(request, "/index.html ");
+                return response;
+            }
+        );
+        mapper.put(
+            RequestTypeMatcher.of(POST, "/user/login"),
+            (request, response) -> {
+                UserLoginRequest loginRequest = request.getBody(UserLoginRequest.class);
+                boolean valid = Optional.ofNullable(DataBase.findUserById(loginRequest.getUserId()))
+                    .filter(user -> user.isSamePassword(loginRequest.getPassword()))
+                    .isPresent();
+
+                if (valid) {
+                    response.redirectTo(request, "/index.html ");
+                } else {
+                    response.redirectTo(request, "/user/login_failed.html ");
+                }
+
                 return response;
             }
         );
