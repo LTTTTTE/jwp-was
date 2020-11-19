@@ -16,13 +16,6 @@ public class WebServerTest {
 
     public Request generateRequest(String request) throws IOException {
         InputStream in = new FileInputStream(new File(testDirectory + request));
-//        BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-//        String line;
-//        List<String> lines = new ArrayList<>();
-//
-//        while (!"".equals(line = br.readLine()) && line != null) {
-//            lines.add(line);
-//        }
         return new Request(in);
     }
 
