@@ -5,12 +5,10 @@ import static webserver.HttpMethod.POST;
 
 import db.DataBase;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import model.User;
 import model.UserCreateRequest;
 import model.UserLoginRequest;
 import utils.TemplateBuilder;
@@ -64,8 +62,7 @@ public class Controller {
             RequestTypeMatcher.of(GET, "/user/list"),
             (request, response) -> {
                 try {
-                    Collection<User> users = DataBase.findAll();
-                    String body = TemplateBuilder.build(request.getPath(), users);
+                    String body = TemplateBuilder.build(request.getPath(), DataBase.findAll());
                     response.ok(request, body);
                 } catch (IOException e) {
                     e.printStackTrace();
