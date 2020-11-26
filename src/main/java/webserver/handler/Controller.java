@@ -46,8 +46,10 @@ public class Controller {
                     .isPresent();
 
                 if (valid) {
+                    response.setCookies("logined=true; Path=/");
                     response.redirectTo(request, "/index.html ");
                 } else {
+                    response.setCookies("logined=false");
                     response.redirectTo(request, "/user/login_failed.html ");
                 }
 

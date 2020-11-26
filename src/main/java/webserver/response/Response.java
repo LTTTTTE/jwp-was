@@ -64,6 +64,10 @@ public class Response {
         }
     }
 
+    public void setCookies(String value) {
+        headers.setHeader("Set-Cookie", value);
+    }
+
     public String getVersion() {
         return version;
     }
