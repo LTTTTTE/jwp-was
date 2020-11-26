@@ -5,6 +5,7 @@ import static utils.FileIoUtils.decode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 import utils.FileIoUtils;
@@ -20,6 +21,10 @@ public class Body {
         if (queryParams != null) {
             this.body += "&" + queryParams;
         }
+    }
+
+    public Body(String body) {
+        this(body.getBytes(StandardCharsets.UTF_8));
     }
 
     public Body(byte[] fileData) {

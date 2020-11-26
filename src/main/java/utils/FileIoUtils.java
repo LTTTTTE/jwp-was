@@ -19,6 +19,6 @@ public class FileIoUtils {
     }
 
     public static byte[] decode(String value) {
-        return Base64.getDecoder().decode(value);
+        return Base64.getMimeDecoder().decode(value);
     }
 }

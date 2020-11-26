@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.Status;
@@ -34,12 +35,29 @@ public class RequestHandler implements Runnable {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             Request request = new Request(in);
             RequestType requestType = request.getRequestType();
+            Response response = emptyResponse();
+            if (preHandle(request, response)) {
+                response = mapping(requestType).apply(request, emptyResponse());
+            }
 
-            Response response = mapping(requestType).apply(request, emptyResponse());
             DataOutputStream dos = new DataOutputStream(out);
             response(response, dos);
         } catch (IOException e) {
             logger.error(e.getMessage());
+        }
+    }
+
+    private boolean preHandle(Request request, Response response) {
+        boolean notAllowedPath = request.isSamePath("/user/list");
+        boolean isLogin = Optional.ofNullable(request.getHeader("Cookie"))
+            .filter(cookie -> cookie.contains("logined=true"))
+            .isPresent();
+
+        if (isLogin || !notAllowedPath) {
+            return true;
+        } else {
+            response.redirectTo(request, "/user/login.html");
+            return false;
         }
     }
 

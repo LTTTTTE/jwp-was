@@ -43,6 +43,17 @@ public class Response {
         headers.setHeader("Content-Length", String.valueOf(body.getLength()));
     }
 
+    public void ok(Request request, String body) {
+        AcceptType type = request.getAcceptType();
+
+        this.body = new Body(body);
+        this.version = request.getVersion();
+        this.status = Status.OK;
+
+        headers.setHeader("Content-Type", type.getContentType() + ";charset=utf-8");
+        headers.setHeader("Content-Length", String.valueOf(this.body.getLength()));
+    }
+
     public void created(Request request) {
         this.status = CREATED;
         this.version = request.getVersion();

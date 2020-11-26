@@ -46,6 +46,10 @@ public class Request {
         }
     }
 
+    public boolean isSamePath(String path) {
+        return requestType.getPath().equals(path);
+    }
+
     public RequestType getRequestType() {
         return requestType;
     }
